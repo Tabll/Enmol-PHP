@@ -49,11 +49,13 @@ if(empty($headers['key']) || $headers['key'] != "QFE1WEG3ER448984WEF7W4849WEF") 
             }else{
                 date_default_timezone_set("Asia/Shanghai");
                 if(strtotime(date('Y-m-d H:i:s',time()))-strtotime($row[1]) < 300){
-                    
+                    if($VerifyCode == $row[0]){
+                        echo "success";
+                    }else{
+                        exit();
+                    }
                 }else{
-
+                    exit();
                 }
-
             }
-            $VerifyCode
     }
