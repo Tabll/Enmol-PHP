@@ -42,7 +42,8 @@ if(empty($headers['key']) || $headers['key'] != "QFE1WEG3ER448984WEF7W4849WEF") 
             }
             break;
         case "2":
-            $result = $SQLWriteConnection->query("SELECT Token,UpdateTime  FROM `Verify_Telephone` WHERE TelephoneNumber = $PhoneNumber LIMIT 1");
+            require dirname(__FILE__).'/../../ENMOL/connector/read-connector.php';
+            $result = $SQLReadConnection->query("SELECT Token,UpdateTime  FROM `Verify_Telephone` WHERE TelephoneNumber = $PhoneNumber LIMIT 1");
             $row=$result->fetch_array(MYSQLI_NUM);
             if($row[0]==NULL){
                 exit();
