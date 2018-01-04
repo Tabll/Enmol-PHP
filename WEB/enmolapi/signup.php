@@ -70,14 +70,18 @@ if(empty($headers['key']) || $headers['key'] != "QFE1WEG3ER448984WEF7W4849WEF") 
                 date_default_timezone_set("Asia/Shanghai");
                 if(strtotime(date('Y-m-d H:i:s',time()))-strtotime($row[1]) < 300){
                     if($VerifyCode == $row[0]){
-                        if(preg_match("(?!^\\d+$)(?!^[a-zA-Z]+$)(?!^[_#@]+$).{8,}",$Password)){
+                        if(preg_match("#(?=^.*?[a-z])(?=^.*?[A-Z])(?=^.*?\d)^(.{8,})$#",$Password) != 0){
                             $vPassword = password_hash($Password, PASSWORD_DEFAULT);
                             $result = $SQLReadConnection->query("SELECT UserID  FROM `Users` WHERE Phone = $PhoneNumber LIMIT 1");
                             $row=$result->fetch_array(MYSQLI_NUM);
                             require dirname(__FILE__).'/../../ENMOL/connector/write-connector.php';
                             if($row[0]==NULL){
-                                $addUser1 = $SQLWriteConnection->query("INSERT INTO `Users` (`Phone`,`Password`) VALUES (`$PhoneNumber`,`$vPassword`)");
-                                $addUser2 = $SQLWriteConnection->query("INSERT INTO `User_Info` (`UserID`,`UserName`,`AddTime`) VALUES (`$row[0]`,`$PhoneNumber`,".strtotime(date('Y-m-d H:i:s',time())).")");
+                                $addUser1 = $SQLWriteConnection->query("INSERT INTO `Users` (`Phone`,`Password`) VALUES ($PhoneNumber,'$vPassword')");
+
+                                $userIDN = $SQLWriteConnection->query("SELECT UserID FROM `Users` WHERE Phone = $PhoneNumber LIMIT 1");
+                                $row=$userIDN->fetch_array(MYSQLI_NUM);
+
+                                $addUser2 = $SQLWriteConnection->query("INSERT INTO `User_Info` (`UserID`,`UserName`,`AddTime`) VALUES ($row[0],$PhoneNumber,NOW())");
                                 echo "success";
                             }else{
                                 $changePassword = $SQLWriteConnection->query("UPDATE `Users` SET Password = $vPassword WHERE Phone = $PhoneNumber LIMIT 1");
