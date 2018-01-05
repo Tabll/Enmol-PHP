@@ -6,6 +6,6 @@
  * Time: 21:04
  */
 
-echo md5("13306103157Wts19970206".time());
+echo md5("13306103157".time());
 echo "</br>";
 echo time();

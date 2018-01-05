@@ -12,7 +12,7 @@ $Password = isset($_POST['user-password']) ? $_POST['user-password'] : "";
 
 $ANSWER = array();
 $ANSWER['NeedUpdate'] = "FALSE";
-$ANSWER['状态'] = "FAILED";
+$ANSWER['State'] = "FAILED";
 $ANSWER['Token'] = "";
 $ANSWER['WARNING'] = "";
 
@@ -24,7 +24,7 @@ switch ($State){
     case "1"://客户端没有Token
         if(isPasswordTrue($PhoneNumber,$Password)){
             newSession($PhoneNumber);
-            $ANSWER['状态'] = "SUCCESS";
+            $ANSWER['State'] = "SUCCESS";
             $ANSWER['NeedUpdate'] = "TRUE";
             $ANSWER['Token'] = getToken($PhoneNumber);
         }else{
@@ -33,15 +33,17 @@ switch ($State){
         break;
     case "2"://客户端存储有Token
         if($Token == getToken($PhoneNumber)){
-            $ANSWER['状态'] = "SUCCESS";
+            $ANSWER['State'] = "SUCCESS";
         }elseif(isPasswordTrue($PhoneNumber,$Password)){
             newSession($PhoneNumber);
-            $ANSWER['状态'] = "SUCCESS";
+            $ANSWER['State'] = "SUCCESS";
             $ANSWER['NeedUpdate'] = "TRUE";
             $ANSWER['Token'] = getToken($PhoneNumber);
         }else{
             $ANSWER['WARNING'] = "用户名或密码错误";
         }
+        break;
+    default:
         break;
 }
 echo json_encode($ANSWER);
